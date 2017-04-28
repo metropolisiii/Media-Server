@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load apptags %}
+{% block title %}Main{% endblock %}
+{% block head %}Welcome to Mycompany TV{% endblock %}
+{% block content %}
+<div id='login_container'>
+	<h1 style='display:block'>Login</h1>
+	{{ state }}
+	<form action="." method="post">
+		{% csrf_token %}
+		<div id='login_table'>
+			<table>
+				<tr>
+					<td align='right'>Username:</td>
+					<td align='left'><input autofocus="autofocus" type="text" name="username" value="{{ username}}" /></td>
+				</tr>
+				<tr>
+					<td align='right'>Password:</td>
+					<td align='left'><input type="password" name="password" value="" /></td>
+				</tr>
+				<tr>
+					<td align='left'><input type="submit" value="Log In" /></td>
+					<td></td>
+				</tr>
+			</table>
+		</div>
+	</form>
+</div>
+{% endblock %}

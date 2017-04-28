@@ -1,0 +1,31 @@
+<VirtualHost *:80>
+
+    ServerName Mycompanytv.Mycompany.com
+    #ServerAlias example.com
+    ServerAdmin webmaster@localhost
+
+    Documentuser /var/www/
+
+    Alias /robots.txt /var/django-apps/Mycompanytv/media_server/static/media/robots.txt
+    Alias /favicon.ico /var/django-apps/Mycompanytv/media_server/static/media/favicon.ico
+
+    # To serve static directly from the web server, un-comment the next 6 lines
+    #Alias /static/ /var/django-apps/Mycompanytv/media_server/static/
+
+    #<Directory /var/dhango-apps/Mycompanytv/media_serverstatic>
+    #Order allow,deny
+    #Allow from all
+    #</Directory>
+
+    WSGIDaemonProcess Mycompanytv.Mycompany.com processes=2 threads=15 display-name=%{GROUP} user=jsmith
+    WSGIProcessGroup Mycompanytv.Mycompany.com
+
+    WSGIScriptAlias / /var/django-apps/Mycompanytv/apache/django.wsgi
+
+    <Directory /var/www/media_server/apache>
+    Order allow,deny
+    Allow from all
+    </Directory>
+
+</VirtualHost>
+

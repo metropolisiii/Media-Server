@@ -1,0 +1,167 @@
+body, html {
+    background: none repeat scroll 0 0 #FFFFFF;
+    color: #333333;
+    font-family: Arial,Verdana;
+    font-size: small;
+    height: 100%;
+    line-height: 1.2em;
+    margin: 0 0 10px;
+    padding: 0;
+}
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, font, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
+    border: 0 none;
+    font-size: 100%;
+    font-style: inherit;
+    font-weight: inherit;
+    margin: 0;
+    outline: 0 none;
+    padding: 0;
+    vertical-align: baseline;
+}
+
+.uploadinfo {
+    width: 252px;
+    word-wrap: break-word;
+}
+#status > a {
+    float: left;
+}
+
+#header-top {
+    clear: both;
+    height: 65px;
+    margin-top: 25px;
+}
+
+
+#header-bottom {
+    background-color: #99CCFF;
+    border-radius: 11px 11px 11px 11px;
+    height: 19px;
+    padding: 10px 25px;
+}
+#image_loader{
+	display:none;
+}
+#dashboard {
+    float: left;
+    font-weight: bold;
+}
+#login {
+    float: right;
+}
+.errors {
+    color: red;
+    font-size: 0.8em;
+}
+
+#status {
+    background-color: #FFFFFF;
+    border-color: #CCCCCC;
+    border-style: solid;
+    border-width: thin;
+    font-size: 0.9em;
+    height: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+h1 {
+    font-size: 24px;
+    font-weight: bold;
+	margin-bottom:20px;
+}
+#footer {
+    clear: both;
+    color: #BBBBBB;
+    font-size: 0.9em;
+    text-align: center;
+}
+
+.media_edit_info{
+	display:none;
+	padding: 18px;
+}
+.media_info {
+    line-height: 30px;
+    margin-left: 275px;
+    margin-top: 2px;
+    min-height: 190px;
+}
+.upload_media_edit label {
+    display: block;
+}
+.description {
+    line-height: 20px;
+}
+#lean_overlay {
+    position: fixed;
+    z-index:100;
+    top: 0px;
+    left: 0px;
+    height:100%;
+    width:100%;
+    background: #000;
+    display: none;
+}
+.modal{
+	background-color: #FFFFFF;
+    color: #000000;
+    display: none;
+    left: 50%;
+    margin-left: -202px;
+    opacity: 1;
+    padding: 15px;
+    position: fixed;
+    top: 200px;
+    z-index: 11000;
+	border-radius:10px;
+}
+.modal_close {
+    background: url("/Mycompanytv/static/images/modal_close.png") repeat scroll 0 0 transparent;
+    display: block;
+    height: 14px;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    width: 14px;
+    z-index: 2;
+}
+
+#upload_media {
+    float: right;
+    width: 21%;
+}
+#upload_media li, #upload_media lo, .upload_media_edit li, .upload_media_edit  lo{
+	list-style: none outside none;
+    text-indent: -8px;
+}
+
+div.ProgressBar { width: 100px; padding: 0; border: 1px solid black; margin-right: 1em; height:.75em; margin-left:1em; display:-moz-inline-stack; display:inline-block; zoom:1; *display:inline; }
+div.ProgressBar div { background-color: Green; font-size: 1pt; height:100%; float:left; }
+span.asyncUploader object { position: relative; top: 5px; left: 10px; }
+#upload_media p,.upload_media_edit p, ul, input[type="submit"]  {
+    font-size: 11px;
+    margin-top: 7px;
+}
+
+#upload_info{
+	display:none;
+}
+
+#upload_info ul {
+    margin-left: 5px;
+}
+
+
+#space_used {
+    float: right;
+    font-size: 0.9em;
+    margin-right: 10px;
+}
+.error {
+    color: red;
+    font-size: 12px;
+    margin-top: 10px;
+}

@@ -1,0 +1,100 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<title>Mycompany TV | {% block title %}{% endblock %} </title>
+		 <script src="http://code.jquery.com/jquery-1.8.1.js"></script>
+		 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.leanModal.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.simplemodal.1.4.4.min.js"></script>
+		
+		<script type="text/javascript" src="{{STATIC_URL}}js/functions.js"></script>
+		<link rel="stylesheet" href="{{STATIC_URL}}css/style.css" type="text/css" />
+		<link id='stylesheet' rel="stylesheet" href="{{STATIC_URL}}css/liststyle.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/ui.css" type="text/css" />
+		 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/modal.css" type="text/css" />
+		<script type="text/javascript" src="{% static 'jwplayer/jwplayer.js' %}"></script>
+		<script src="{{STATIC_URL}}js/swfupload.js"></script>
+		<script src="{{STATIC_URL}}js/jquery-asyncUpload-0.1.js"></script>
+		
+		<script>jwplayer.key="iU/Q4e7+h+8g5Mz42UvQjETQ0mvWAJf/v5LBaVl26II="</script>
+		
+	</head>
+	<body>
+		{{ request.session.name }}
+		<div id="wrap">
+			<div id="header">
+				<div id="header-top">
+					<div id="branding">
+						<img src="{{STATIC_URL}}images/Mycompany_logo.png" /><span id='branding_title'> TV </span>
+					</div>
+					<div id="search">
+						<form action='/' method='GET'>
+							<table cellpadding="0px" cellspacing="0px">
+								<tr>
+									<td>
+										<input type="text" id="search_input" name="query">
+									</td>
+									<td>
+										<input type="submit" value="" style="border-style: none; background: url('{% static "images/btn-search.png" %}') no-repeat; width: 24px; height: 20px;">
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+				</div>
+				<div id="header-bottom">
+					<div id='dashboard'>Dashboard</div>
+					<div id='authinfo'>
+						{% if user.is_authenticated %}
+							Welcome {{ user.first_name }}
+							(<a href="/logout">Logout</a>)
+						{% else %}
+							<a href="/login">Login</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div id="body">
+				<div id="status">
+					{% if user.is_authenticated %}
+						{% if request.GET.page != 'user' %}
+							<a href='/?page=user'>My Media</a>
+						{% else %}
+							<a href='/'>Main</a>
+						{% endif %}
+					{% endif %}
+					<div id='views'>
+						<img id='listview' src="{% static "images/listview.png" %}"/> <img id="gridview" src="{% static "images/gridview.png" %}"/>
+					</div>
+					<div id='space_used'>
+						{% if user.is_authenticated %}
+							{% load apptags %}
+							Space Used: {% space_used user.username %} GB
+						{% endif %}
+					</div>
+				</div>
+				
+				<div id="main" class="container"
+					{% if user.is_authenticated %} 
+					style='float:left; width:75%' 
+					{% endif %}>
+					{% block content %}{% endblock %}
+				</div>
+				<!-- contains the content to be loaded when scrolled -->
+				<nav id="page-nav">
+				  <a href="pages/2.html"></a>
+				</nav>
+				{% if user.is_authenticated %}
+					{% block auth_content %}{% endblock %}
+				{% endif %}
+			</div>
+			<div id="footer">&copy; 2013 Mycompany, All Rights Reserved</div>
+		</div>
+	</body>
+</html>

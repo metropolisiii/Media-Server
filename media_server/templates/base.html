@@ -1,0 +1,111 @@
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<title>Mycompany TV | {% block title %}{% endblock %} </title>
+		 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.1/jquery.min.js"></script>
+		 <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/jquery-ui.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.leanModal.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.simplemodal.1.4.4.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/functions.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.touchSwipe.js"></script>
+		<link rel="stylesheet" href="{{STATIC_URL}}css/style_ss.css" type="text/css" />
+		<link id='stylesheet' rel="stylesheet" href="{{STATIC_URL}}css/liststyle.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/ui.css" type="text/css" />
+		 <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.0/themes/smoothness/jquery-ui.css" />
+		 <script type="text/javascript" src="{{STATIC_URL}}js/jquery.touchSwipe.js"></script>
+		<link rel="stylesheet" href="{{STATIC_URL}}css/modal.css" type="text/css" />
+		<script type="text/javascript" src="{% static 'jwplayer7/jwplayer.js' %}"></script>
+		<script type="text/javascript" src="{% static 'jwplayer7/provider.html5.js' %}"></script>
+		<script src="{{STATIC_URL}}js/swfupload.js"></script>
+		<script src="{{STATIC_URL}}js/jquery-asyncUpload-0.1.js"></script>
+		
+		<script>jwplayer.key="C3JGDyGK75ufJ9C6uToJpvqgyYNt6kxGil6juQ==";</script>
+                
+		
+	</head>
+	<body>
+		{{ request.session.name }}
+		<div id="wrap">
+			<div id="header">
+				<div id="branding">
+					<a href = '/'>
+                    <div id="branding_logo">
+						<img src="{{STATIC_URL}}images/Mycompany_logo2.png" height="35px" width="180px"/><span id='branding_title'> TV </span>
+					</div>
+                    </a>
+				</div>
+				<div id="header_right">
+					<div id="search">
+						<form action='' method='GET'>
+							<table id="search_table" cellpadding="0px" cellspacing="0px">
+								<tr>
+									<td>
+										<input type="text" id="search_input" name="query">
+									</td>
+									<td>
+										<input type="submit" value="" style="border-style: none; background: url('{% static "images/btn-search.png" %}') no-repeat; width: 24px; height: 20px;">
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+					<div id='authinfo'>
+						{% if user.is_authenticated %}
+							{{ user.first_name }} {{ user.last_name}} | 
+							(<a href="/logout/">Logout</a>)
+						{% else %}
+							<a href="/login/">Click Here to Login</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+			<div id="body">
+				<!--<div id="status">
+					{% if user.is_authenticated %}
+						{% if request.GET.page != 'user' %}
+							<a href='/?page=user'>My Media</a>
+						{% else %}
+							<a href='/'>Main</a>
+						{% endif %}
+					{% endif %}
+					<div id='views'>
+						<img id='listview' src="{% static "images/listview.png" %}"/> <img id="gridview" src="{% static "images/gridview.png" %}"/>
+					</div>
+					<div id='space_used'>
+						{% if user.is_authenticated %}
+							{% load apptags %}
+							Space Used: {% space_used user.username %} of 10GB
+						{% endif %}
+					</div>
+				</div>
+				-->
+				<div id="main" class="container"
+					{% if user.is_authenticated %} 
+					style='float:left; width:75%' 
+					{% endif %}>
+					{% block content %}{% endblock %}
+				</div>
+				<!-- contains the content to be loaded when scrolled -->
+				<nav id="page-nav">
+				  <a href="pages/2.html"></a>
+				</nav>
+				{% if user.is_authenticated %}
+					{% block auth_content %}{% endblock %}
+				{% endif %}
+			</div>
+			<div id="footer">&copy; <span id='copyright'></span> Mycompany, All Rights Reserved</div>
+		</div>
+        <script>
+            {% if request.user.is_authenticated %}
+                USER_STATUS = 'true';
+            {% else %}
+                USER_STATUS = 'false';
+            {% endif %};
+        </script>
+	</body>
+</html>

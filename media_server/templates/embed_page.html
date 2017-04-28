@@ -1,0 +1,74 @@
+{% load apptags %}
+{% load static from staticfiles %}
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+		<title>Mycompany TV | Embed </title>
+		 <script src="http://code.jquery.com/jquery-1.8.1.js"></script>
+		 <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.cookie.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.leanModal.min.js"></script>
+		<script type="text/javascript" src="{{STATIC_URL}}js/jquery.simplemodal.1.4.4.min.js"></script>
+
+		<script type="text/javascript" src="{{STATIC_URL}}js/functions.js"></script>
+		<link rel="stylesheet" href="{{STATIC_URL}}css/style_ss.css" type="text/css" />
+		<link id='stylesheet' rel="stylesheet" href="{{STATIC_URL}}css/liststyle.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/jquery-ui.css" type="text/css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/ui.css" type="text/css" />
+		 <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		<link rel="stylesheet" href="{{STATIC_URL}}css/modal.css" type="text/css" />
+		<script type="text/javascript" src="{% static 'jwplayer/jwplayer.js' %}"></script>
+		<script type="text/javascript" src="{% static 'jwplayer/jwplayer.html5.js' %}"></script>
+		<script src="{{STATIC_URL}}js/swfupload.js"></script>
+		<script src="{{STATIC_URL}}js/jquery-asyncUpload-0.1.js"></script>
+
+		<script>jwplayer.key="iU/Q4e7+h+8g5Mz42UvQjETQ0mvWAJf/v5LBaVl26II="</script>
+		<script>
+			// Enables CORS
+var enableCORS = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+ 
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    }
+    else {
+      next();
+    }
+};
+ 
+ 
+// enable CORS!
+//app.use(enableCORS);
+		</script>
+	</head>
+	<body>
+       
+		<div id='video'>
+					<div id="vid">Loading the player ...</div>
+					<script type="text/javascript">
+						var state=false;
+						jwplayer("vid").setup({
+							file: "{{MEDIA_URL}}{{media.file}}",
+							height: {{dimensions.height}},
+							image: "{{MEDIA_URL}}{{media.file}}.jpg",
+							width: {{dimensions.width}},
+                            primary: 'flash',
+						});
+						jwplayer("vid").onPlay(function(){
+							if (!state){
+								state=true;
+								var id=$(this).attr('id').split('_');
+								id=id[1];
+							}
+						});
+					</script>
+				</div>
+    </body>
+</html>
+
+

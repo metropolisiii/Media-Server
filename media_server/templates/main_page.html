@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load apptags %}
+{% block title %}Main{% endblock %}
+{% block head %}Welcome to Mycompany TV{% endblock %}
+{% load staticfiles %}	
+https://jsmith@community.Mycompany.com/git/scm/MS/medserver.git
+{% block content %}
+<script>
+    function submitted() {
+        alert("Video is being uploaded, feel free to navigate away from/refresh this page");
+//        $.modal.close();
+    }
+</script>
+	<div id="menu">
+	<table>
+		<tr>
+			<td class='hoverable' id='myvideos' style='text-align:center;width:11%; min-width:100px;'><a href='/?page=user'>My Videos</a></td>
+			<td class='hoverable' id='featured' style='text-align:center;width:11%; min-width:100px;'><a href='/?page=featured'>Featured</a></td>
+			<td class='hoverable' id='new' style='text-align:center;width:11%; min-width:110px;'><a href='/?page=new'>What's New</a></td>
+            <td class='hoverable' id='favorites' style='text-align:center;width:11%;min-width: 110px;'><a href='/?page=favorites'>Favorites</a></td>
+			<td style='width:32%'>
+			{% if user.is_staff %}
+			   <a href='/admin'>Admin</a>
+			{% endif %}
+			</td>
+			<td style='width:12%; min-width:50px; text-align:right; padding-right:7px;'>
+				<div id='views'>
+					<img id='listview' src="{% static 'images/listview.png' %}"/> <img id="gridview" src="{% static "images/gridview.png" %}"/>
+				</div>
+			</td>
+		</tr>
+	</table>
+</div>
+    <!--{% if category_display %}-->
+    <div class='tags'>
+        <span>Category: </span>
+        <a href = '/'>
+        <span class="tag_remove tagbutton blue bigrounded">
+            {{ category_display }}
+        </span>
+        </a>
+    </div>
+    <!--{% endif %}-->
+    {% if tag_display %}
+    <div class='tags'>
+        <span>Tags: </span>
+        {% for tag in tag_filters %}
+            <span class="tag_remove tagbutton blue bigrounded">
+                {{ tag }}
+            </span>
+        {% endfor %}
+    </div>
+    {% endif %}
+	{% include "media_stage.html" %}	
+{% endblock %}
+{% block auth_content %}
+	<div id="upload_media">
+		<!-- <h2>My Media</h2> -->
+		<div class='errors'>{{error}}</div>
+		<br/>
+		<button id='upload_your_media'>Upload Your Media</button>
+		<form action="/" enctype="multipart/form-data" id="upload_info" class="upload_media_edit" method="post" onsubmit="submitted()">{% csrf_token %}
+            <div id='ajaxwrapper'>
+				{{ form.as_p }}
+                <a id = "featured_{{key}}" class='button featured_button' href="mailto:{{superusers}}?Subject=Please%20Feature%20Media&body=Media%20Name%20(same%20as%20short%20description):%20{{value.name}}%0ADescription:%20{{ value.description }}">Request Video to be "Featured"</a>
+				<p id='sendwrapper'><input type="submit" value="Submit" id='upload_submit' class='submit_button' /></p>
+				<div class='expires_date'>Expires: {% expires %}</div>
+			</div>
+            <div style="margin:0 auto;width:50%;margin-top:100px;min-height:200px;max-height:200px;" id='image_loader'><img src='{{STATIC_URL}}images/ajax-loader.gif'/><br/>Uploading Media...</div>
+		</form>
+		<h2 class='user_info'>My Stats</h2>
+		<p class='tabbed'>
+		<!-- {% load apptags %} -->
+		Videos: {% num_videos user.username %}<br />
+		Last upload: {% last_upload user.username %}<br />
+		{% if request.user.is_authenticated %}
+        Space used: {% space_used user.username %} of <span id = "space_counter">{{ space }}</span> GB<br />
+		{% endif %}
+		<p id="space">request more space</p>
+		<h2 class='user_info'>Categories</h2>
+		<p class='tabbed' style="font-size:16px;">
+           {% for category in categories %}
+           <a href='/categories/{{category.name.split|join:"_"|lower}}/'>{{ category.name }}</a> <br />
+           {% endfor %}
+		</p>
+		<h2 class='user_info'>Instructions</h2>
+		<span class='tabbed'>
+           <a class='instructions' style="padding-left:0px;">Uploading a video</a><br />
+               <div style="margin-top:50px;min-height:350px;max-height:350px;;display:none;">
+                   <h2 style='color:#99ccff;'>Uploading a video</h2> <br />
+                    1.	After logging in, click the grey “Upload Your Media” button. <br />
+                    2.	Fill out the pop-up form. The Media Short Description (title) and file fields must be filled out, along with privacy and retention period options. Everything else is optional. <br />
+                    3.	Currently, only .h264 encoded mp4s are accepted. If you are unable to upload an .mp4 file, this is likely the reason. Contact IT for assistance if you are experiencing problems with these uploads. <br />
+                    4.	If the video being uploaded should be labeled “Featured” (if it should show up in the “Featured” tab), press the “Request Video to be Featured” button.  This will open up an e-mail message to the website administrator. Please provide a short description of the video, or why it should be featured. <br />
+                    5.	Adding tags will make it easier for others to find your videos. See “Tagging Suggestions” for some tips on effective tagging. <br />
+                </div>
+           <a class='instructions'>Format conversion</a><br />
+                <div style="margin-top:100px;min-height:200px;max-height:200px;;display:none;">
+                    <h2 style='color:#99ccff;'>Format conversion</h2> <br />
+                    The video player natively supports .flv, .mp4, and .webm videos. Other supported filetypes (.avi, .wmv) will require a conversion to .mp4. The server will automatically attempt this conversion upon upload, however, the process is much slower than a conversion on your own computer. If possible, attempt to upload videos already in .mp4 file format.
+                </div>
+           <a class='instructions'>Retention period</a><br />
+                <div style="margin-top:100px;min-height:200px;max-height:200px;;display:none;">
+                    <h2 style='color:#99ccff;'>Retention period</h2> <br />
+            	    The retention period controls how long your video will remain on the site. Expiration times can be set using presets (1 month – 1 year), or with a custom date, chosen from a calendar. If the video should not expire at a particular time, select the “Forever” button.
+                </div>
+           <a class='instructions'>Setting access restrictions</a><br />
+                <div style="margin-top:100px;min-height:200px;max-height:200px;;display:none;">
+                    <h2 style='color:#99ccff;'>Setting access restrictions</h2> <br />
+                    Setting restrictions on your uploaded videos is very important. By default, your videos will only be visible to you. There are two ways to change this. The video access can be set in the form submitted when the video is uploaded. After it’s been uploaded, these restrictions can be changed using the edit button. The standard groups are Members, Technology Partners, Employees, and Contractors. Any combination of these groups can be chosen. In addition, videos can be made viewable by all with the Public option.
+                </div>
+		   <a class='instructions'>Tagging suggestions</a><br />
+                <div style="margin-top:100px;min-height:200px;max-height:200px;;display:none;">
+                    <h2 style='color:#99ccff;'>Tagging suggestions</h2> <br />
+                    Tags are keywords that make it easy to categorize your media. Users are able to filter media for specific tags (i.e. DOCSIS 3.0, IPv6, etc). Tags are not limited to single words, but can actually be multiple word phrases, such as "Networking Protocols" or "IT Training."<br /><br /> By adding pertinent tags to your media, you will make it much easier for people to find your media. Try using tags that describe the content of your media, and are general enough to stand on their own. For example, "DOCSIS 3.0" provides a somewhat specific tag, while "Protocols" provides a rather general tag. Both of these are suitable, but a tag that is highly specific to your media, i.e. "Version 3", is much less likely to help the user find your media. <br />
+                </div>
+	    </span>
+        <h2 class='user_info'>About MycompanyTV</h2>
+<div style="font-size:11px;color:#069;padding-left:4px; line-height:13px">
+            MycompanyTV is a self-service web app for hosting Mycompany video content requiring restricted access.
+            CLTV provides two very distinct features for managing and protecting CableLab video content.
+			<p class='more_link'>more...</p>
+            <div id='more_info'>
+				<h4>
+				1. Access control to videos:
+				</h4>
+					<div style="padding-left:20px;">
+					<div class="about">
+					<p>- Logged in users - requires a Mycompany user id/password</p>
+					<p>- Type of user – employees, contractors, members and technology partners</p>
+					<p>- Active Directory security groups (managed by IT)</p>
+					<p>- Only viewable by the person who uploaded the video</p>
+					</div>
+					</div>
+				<br />
+				2. Retention periods for automatic content archive <br /><br />
+				Please note that videos with "Public" access do not require a login/password and are open for viewing by anyone using this URL.<br />
+				<br />
+				Enjoy using CLTV and please contact IT with questions and suggestions. Thanks!
+			</div>
+        </div>
+    </div>
+{% endblock %}

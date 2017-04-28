@@ -1,0 +1,271 @@
+
+{% load apptags %}
+{% block media_stage %}
+{% load staticfiles %}
+<div id='media_stage'>
+    {% for key, value in media reversed %}
+		<script>
+			 $(function() {
+				$( "#test_{{key}}" ).dialog({
+					autoOpen: false,
+					modal:true,
+				});
+				$( "#test_{{key}}" ).on('dialogclose',function(event, ui) {
+					{% if not value.is_360 %}
+						jwplayer('vid_{{key}}').pause(true);
+					{% else %}
+						$('#test_{{key}}').find('.iframe360').attr('src','/360/?image={{MEDIA_URL}}{{value.filename}}.jpg');
+					{% endif %}
+				});
+
+			  });
+		</script>
+
+		<div class='media'>
+			<div class='media_area' id='media_{{key}}'>
+					<div class='media_display' >
+						<a class='media_click {% if value.is_360 %}is360{% endif %}' id='medialink_{{key}}' {% if value.is_360 %}onclick="$('#test_{{key}}').find('.iframe360').attr('src','/360/?video={{MEDIA_URL}}{{value.filename}}&is_stereo=false&image={{MEDIA_URL}}{{value.filename}}.jpg');"{% endif %}>
+                            {% if value.done_uploading %}
+                                <img src='{{MEDIA_URL}}{{value.filename}}.jpg'/>
+                            {% else %}
+                                <img src='{{MEDIA_URL}}ajax-loader.gif' style="height:100px;width:200px;">
+                            {% endif %}
+                        </a>
+						<div class='duration'>{{value.duration}}</div>
+					</div>
+
+					<div class='media_details'>
+						{% if user.username != value.first_name and not user.is_superuser %}
+						
+                        <div>
+                            <button class="details_button actions" id="details_{{key}}">details...</button>
+                            <div class="modal_details">
+                                <span class='label'>category</span>
+								{% for category in value.categories %}
+									{% if category.name %}
+										{% if forloop.last %}
+											<li><span class='label'>  <a href='/categories/{{category.name.split|join:"_"|lower}}/'>{{ category.name }}</a> </span></li>
+										{% else %}
+											<li><span class='label'> <a href='/categories/{{category.name.split|join:"_"|lower}}/'>{{ category.name }}</a>, </span></li>
+										{% endif %}
+									{% endif %}
+								{% endfor %}
+							<br />
+							<br/>
+							<span class="label">description</span>
+							 {{value.description|linebreaksbr}}
+							<br />
+							<br/>
+							<div id='tags'>
+								<span style='float:left' class='label'>tags</span>
+									<div id='tag_buttons'>
+									{% for tag in value.tags %}
+										{% if tag.name %}
+											<li><span class='label tagbutton tb blue bigrounded'>{{ tag.name }}</span></li>
+										{% endif %}
+									{% endfor %}
+									</div>
+								</div>
+							<br />
+							<br/>
+							<span class='label'>located on</span>
+								<li><span class='label'>Mycompany private cloud</span></li>
+							<br />
+							<br />
+							<span class='label media_det'>access</span>
+								{% for group in value.groups %}
+									{% if forloop.last %}
+										<li> <span class='label'>{{ group }}</span> </li>
+									{% else %}
+										<li> <span class='label'>{{ group }},</span> </li>
+									{% endif %}
+								{% endfor %}
+							<br/><br/>
+							<p><span class='label'>expires</span> {{ value.expires }}
+							</p>
+                            </div>
+                            <button class='embed_button actions' id='embed_{{key}}'>embed</button>
+						    <div class='modal_embed'>
+                                &lt;iframe width="610" height="425" src="//Mycompanytv.Mycompany.com/embed/{{key}}?width=600&height=400" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+                            </div>
+                            <button class="embed_button actions" id='share_{{key}}'>share</button>
+                            <div style="margin-top:30px;min-height:70px;max-height:70px;;display:none;">
+                                <h2 style='color:#99ccff;'>Share this link for direct access to the video</h2><br />
+                                https://Mycompanytv.Mycompany.com/v/{{key}}
+                            </div>
+							<a class='download_link' href="/download/?id={{key}}">download</a>
+                        </div>
+						<!--<div class='edit_shown'>-->
+						{% else %}
+						<!--<div class='edit_hidden'>-->
+						<div>
+							<button class='edit_button actions' id='edit_{{key}}'>edit</button> | 
+							<div class='media_edit_info'>
+					{% if user.username == value.first_name or user.is_superuser %}
+					<form id='upload_media_edit_{{key}}' class='upload_media_edit' action='/' method='post' enctype="multipart/form-data">{% csrf_token %}
+						{{forms|access:key}}
+                        <a id = "featured_{{key}}" class='button featured_button' href="mailto:j.smith@Mycompany.com;d.hoyer@Mycompany.com?Subject=Please%20Feature%20Media&body=Media%20Name:%20{{value.name}}%0AID = {{ key }}%0ADescription:%20{{ value.description }}">Request Video to be "Featured"</a>
+                        <p class='send_wrapper'><input type="submit" value="Save" id='submit_{{key}}' class='submit_button'/></p>
+						<input type='hidden' name='formid' value='{{key}}'/>
+						<div class='expires_date'>Expires: {{value.expires}}</div>
+					</form>
+					{% endif %}
+				</div>
+                            <button class="details_button actions" id="details_{{key}}">details...</button> | 
+                            <div class="modal_details">
+                                	<span class='label'>category</span>
+                            {% for category in value.categories %}
+                                {% if category.name %}
+                                    {% if forloop.last %}
+                                        <li><span class='label'>  <a href='/categories/{{category.name.split|join:"_"|lower}}/'>{{ category.name }}</a> </span></li>
+                                    {% else %}
+                                        <li><span class='label'> <a href='/categories/{{category.name.split|join:"_"|lower}}/'>{{ category.name }}</a>, </span></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        <br />
+						<br/>
+						<span class="label">description</span>
+						 {{value.description|linebreaksbr}}
+                        <br />
+						<br/>
+						<div id='tags'>
+							<span style='float:left' class='label'>tags</span>
+								<div id='tag_buttons'>
+								{% for tag in value.tags %}
+									{% if tag.name %}
+										<li><span class='label tagbutton tb blue bigrounded'>{{ tag.name }}</span></li>
+									{% endif %}
+								{% endfor %}
+								</div>
+							</div>
+                        <br />
+						<br/>
+                        <span class='label'>located on</span>
+                            <li><span class='label'>Mycompany private cloud</span></li>
+						<br />
+                        <br />
+                        <span class='label media_det'>access</span>
+							{% for group in value.groups %}
+							    {% if forloop.last %}
+                                    <li> <span class='label'>{{ group }}</span> </li>
+							    {% else %}
+                                    <li> <span class='label'>{{ group }},</span> </li>
+                                {% endif %}
+                            {% endfor %}
+						<br/><br/>
+                        <p><span class='label'>expires</span> {{ value.expires }}
+                        </p>
+                            </div>
+							<button class='delete_button actions' id='delete_{{key}}'>delete</button> | 
+							<button class='embed_button actions' id='embed_{{key}}'>embed</button> | 
+						    <div class='modal_embed'>
+                                &lt;iframe width="610" height="425" src="//Mycompanytv.Mycompany.com/embed/{{key}}?width=600&height=500" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+                            </div>
+                            <button class="embed_button actions" id='share_{{key}}'>share</button> | 
+                            <div style="margin-top:30px;min-height:70px;max-height:70px;;display:none;">
+                                <h2 style='color:#99ccff;'>Share this link for direct access to the video</h2><br />
+                                https://Mycompanytv.Mycompany.com/v/{{key}}
+                            </div>
+								<a class='download_link' href="/download/?id={{key}}">download</a>
+                        </div>
+                        {% endif %}
+						<!--<div class='description'>
+						{{value.description|linebreaksbr}}
+                        </div>-->
+                        <br />
+					
+				</div>
+				<div class='media_other'>
+					<div class='media_other_left'>
+                    {% if value.is_360 %}
+						<div class='vid360'>360 Video! - <span>Use your mouse to adjust the camera</span></div>
+					{% endif %}
+					<h3 id ="direct"><a href="/v/{{ key }}">{{value.name}}</a></h3>
+					from <span class='media_user'><a href=''>{% first_name value.first_name %} {% last_name value.first_name %}</a></span>
+					uploaded on {{value.date }}
+                    </div>
+
+                    <div class="media_other_right">
+                        <table cellpadding="0px" cellspacing="0px">
+						    <tr>
+							    <td>
+                                    {% if value.is_favorite %}
+						                <img src="{{STATIC_URL}}images/star_on.png" class="favorites_on"/>
+					                {% else %}
+						                <img src="{{STATIC_URL}}images/star_off.png" class="favorites"/>
+					                {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span id='view_{{key}}'>
+                                        {% if value.views == 1 %}
+                                            {{  value.views  }} view
+                                        {% else %}
+                                            {{  value.views  }} views
+                                        {% endif %}
+                                    </span
+                                </td>
+                            </tr>
+						</table>
+                    </div>
+				</div>
+				<div id='test_{{key}}'>
+					{% if value.is_360 %}
+						<iframe width="100%" class="iframe360" scrolling="no" allowfullscreen src="/360/?image={{MEDIA_URL}}{{value.filename}}.jpg"></iframe>
+						<script>
+							var state_{{key}}=false;
+							$('.is360').click(function(){
+								if (!state_{{key}}){
+									state_{{key}}=true;
+									var id=$(this).attr('id').split('_');
+									id=id[1];
+									$.post('/changeviews/', {id:id}, function(data){
+										$('#view_'+id).html(data);
+									});
+									woopra.track('playvideo', {
+										videoname: '{{value.name}}'
+									});
+								}
+							});
+							
+						</script>
+					{% else %}
+						<div id="vid_{{key}}">Loading the player ...</div>
+						<script type="text/javascript">
+							var state_{{key}}=false;
+							jwplayer("vid_{{key}}").setup({
+								file: "{{MEDIA_URL}}{{value.filename}}",
+								height: 400,
+								image: "{{MEDIA_URL}}{{value.filename}}.jpg",
+								width: 600,
+								primary: 'flash',
+								 modes: [
+								   {type: "flash"},
+								   {type: "html5"}
+							   ],
+							});
+							jwplayer("vid_{{key}}").onPlay(function(){
+								if (!state_{{key}}){
+									state_{{key}}=true;
+									var id=$(this).attr('id').split('_');
+									id=id[1];
+									$.post('/changeviews/', {id:id}, function(data){
+										$('#view_'+id).html(data);
+									});
+									woopra.track('playvideo', {
+										videoname: '{{value.name}}'
+									});
+
+								}
+							});							
+						</script>
+					{% endif %}
+				</div>
+				
+			</div>
+		</div>
+	{% endfor %}
+</div>
+{% endblock %}
